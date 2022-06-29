@@ -4,7 +4,7 @@
 title = Mobile App 001
 
 # (str) Package name
-package.name = mobileapp001
+package.name = mobileapp000
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.wiseplat

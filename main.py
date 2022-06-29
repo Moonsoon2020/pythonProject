@@ -55,14 +55,12 @@ class StressCanvasApp(App):
 
         btn_reset = Button(text='Reset',
                            on_press=partial(self.reset_rects, label, wid))
-
         layout = BoxLayout(size_hint=(1, None), height=50)
         layout.add_widget(btn_add100)
         layout.add_widget(btn_add500)
         layout.add_widget(btn_double)
         layout.add_widget(btn_reset)
         layout.add_widget(label)
-
         root = BoxLayout(orientation='vertical')
         root.add_widget(wid)
         root.add_widget(layout)

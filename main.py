@@ -1,73 +1,57 @@
-'''
-Canvas stress
-=============
+y, x, k = map(int, input().split())
+cordx1, cordy1 = 0, y - 1
+post1 = -1
+flag1 = True
+part2 = 0
+ck = 0
+dx, dy = 1, 0
+x0, y0 = 0, y - 1
+arr = [[None] * x for _ in range(y)]
+arr[y - 1][0] = 1
+def dev1(n , m):
+    global y0, x0, dx, dy, ck, part2, arr
+    arr[y0][x0] = 1
+    nx, ny = x0 + dx, y0 + dy
+    if part2 <= nx < n - part2 and part2 <= ny < m - part2 and not arr[ny][nx]:
+        x0, y0 = nx, ny
+    else:
+        dx, dy = dy, -dx
+        x0, y0 = x0 + dx, y0 + dy
+    return x0, y0
 
-This example tests the performance of our Graphics engine by drawing large
-numbers of small squares. You should see a black canvas with buttons and a
-label at the bottom. Pressing the buttons adds small colored squares to the
-canvas.
-
-'''
-
-
-from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.app import App
-from kivy.graphics import Color
-from kivy.graphics import Rectangle
-from random import random as r
-from functools import partial
-
-
-class StressCanvasApp(App):
-
-    def add_rects(self, label, wid, count, *largs):
-        label.text = str(int(label.text) + count)
-        with wid.canvas:
-            for x in range(count):
-                Color(r(), 1, 1, mode='hsv')
-                Rectangle(pos=(r() * wid.width + wid.x,
-                               r() * wid.height + wid.y), size=(20, 20))
-
-    def double_rects(self, label, wid, *largs):
-        count = int(label.text)
-        self.add_rects(label, wid, count, *largs)
-
-    def reset_rects(self, label, wid, *largs):
-        label.text = '0'
-        wid.canvas.clear()
-
-    def build(self):
-        wid = Widget()
-
-        label = Label(text='0')
-
-        btn_add100 = Button(text='+ 100 rects',
-                            on_press=partial(self.add_rects, label, wid, 100))
-
-        btn_add500 = Button(text='+ 500 rects',
-                            on_press=partial(self.add_rects, label, wid, 500))
-
-        btn_double = Button(text='x 2',
-                            on_press=partial(self.double_rects, label, wid))
-
-        btn_reset = Button(text='Reset',
-                           on_press=partial(self.reset_rects, label, wid))
-        layout = BoxLayout(size_hint=(1, None), height=50)
-        layout.add_widget(btn_add100)
-        layout.add_widget(btn_add500)
-        layout.add_widget(btn_double)
-        layout.add_widget(btn_reset)
-        layout.add_widget(label)
-        root = BoxLayout(orientation='vertical')
-        root.add_widget(wid)
-        root.add_widget(layout)
-
-        return root
+def dev2():
+    global cordx1, cordy1, post1, flag1
+    if cordy1 == y - 1 and cordx1 == 0:
+        cordy1 -= 1
+    elif (cordy1 == 0 or cordy1 == y - 1) and flag1:
+        cordx1 += 1
+        post1 *= -1
+        flag1 = False
+    else:
+        flag1 = True
+        cordy1 += post1
+    return cordx1, cordy1
 
 
-
-if __name__ == '__main__':
-    StressCanvasApp().run()
+a = [[0 for i in range(x)] for j in range(y)]
+a[y-1][0] = 3
+t = [1]
+for i in range(1, x * y):
+    s = dev1(x, y)
+    h = 0
+    if a[s[1]][s[0]] == 2:
+        a[s[1]][s[0]] = 3
+        h += 1
+    else:
+        a[s[1]][s[0]] = 1
+    s = dev2()
+    if a[s[1]][s[0]] == 1:
+        a[s[1]][s[0]] = 3
+        h += 1
+    else:
+        a[s[1]][s[0]] = 2
+    t.append(t[-1] + h)
+u = []
+for i in input().split():
+    u.append(str(t[int(i) - 1]))
+print(' '.join(u))
